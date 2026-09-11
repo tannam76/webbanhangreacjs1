@@ -7,8 +7,6 @@ README.md
 .env
 .env.local
 .env.*.local
-public
-src
 .docker
 Dockerfile
 .dockerignore
