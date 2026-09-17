@@ -1,87 +1,40 @@
-import {
-  MDBCol,
-  MDBContainer,
-  MDBFooter,
-  MDBIcon,
-  MDBRow,
-} from 'mdb-react-ui-kit';
+import { faEnvelope, faLocationDot, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import '../assets/style/footer.css';
 
-export default function App() {
+export default function Footer() {
   return (
-    <MDBFooter className='bg-dark text-white text-center text-lg-start'>
-      <MDBContainer className='p-4'>
-        <MDBRow>
-          {/* Cột Logo và giới thiệu */}
-          <MDBCol lg="4" md="12" className='mb-4 mb-md-0'>
-            <h5 className='text-uppercase'>
-              <MDBIcon fas icon="rocket" className="me-2" />
-              My Website
-            </h5>
-            <p>
-              Khám phá những thông tin hữu ích, dịch vụ hàng đầu và trải nghiệm không giới hạn.
-            </p>
-            <div>
-              <MDBIcon fab icon="facebook" className="me-3 text-white" />
-              <MDBIcon fab icon="twitter" className="me-3 text-white" />
-              <MDBIcon fab icon="instagram" className="me-3 text-white" />
-              <MDBIcon fab icon="linkedin" className="text-white" />
-            </div>
-          </MDBCol>
+    <footer className="site-footer">
+      <div className="footer-container">
+        <div>
+          <h2>ShopEase</h2>
+          <p>
+            Cửa hàng trực tuyến tập trung vào trải nghiệm mua sắm gọn gàng,
+            sản phẩm chọn lọc và dịch vụ hỗ trợ rõ ràng.
+          </p>
+        </div>
 
-          {/* Cột Links */}
-          <MDBCol lg="4" md="6" className='mb-4 mb-md-0'>
-            <h5 className='text-uppercase'>Liên kết nhanh</h5>
-            <ul className='list-unstyled'>
-              <li>
-                <a href='#!' className='text-white'>
-                  Trang chủ
-                </a>
-              </li>
-              <li>
-                <a href='#!' className='text-white'>
-                  Dịch vụ
-                </a>
-              </li>
-              <li>
-                <a href='#!' className='text-white'>
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href='#!' className='text-white'>
-                  Liên hệ
-                </a>
-              </li>
-            </ul>
-          </MDBCol>
+        <div>
+          <h3>Liên hệ</h3>
+          <ul>
+            <li><FontAwesomeIcon icon={faPhone} /> 0900 123 456</li>
+            <li><FontAwesomeIcon icon={faEnvelope} /> support@shopease.vn</li>
+            <li><FontAwesomeIcon icon={faLocationDot} /> TP. Hồ Chí Minh</li>
+          </ul>
+        </div>
 
-          {/* Cột Newsletter */}
-          <MDBCol lg="4" md="6" className='mb-4 mb-md-0'>
-            <h5 className='text-uppercase'>Đăng ký nhận tin</h5>
-            <p>Nhận thông báo và ưu đãi mới nhất từ chúng tôi.</p>
-            <form>
-              <div className='d-flex'>
-                <input
-                  type='email'
-                  className='form-control me-2'
-                  placeholder='Email của bạn'
-                />
-                <button type='submit' className='btn btn-primary'>
-                  Đăng ký
-                </button>
-              </div>
-            </form>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-
-      <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-        © {new Date().getFullYear()} Bản quyền thuộc về: 
-        <a className='text-white ms-1' href='https://hethongcode.com/'>
-          HTCD
-        </a>
+        <div>
+          <h3>Nhận tin ưu đãi</h3>
+          <form className="footer-form">
+            <input type="email" placeholder="Email của bạn" aria-label="Email của bạn" />
+            <button type="submit">Gửi</button>
+          </form>
+        </div>
       </div>
-    </MDBFooter>
+      <div className="footer-bottom">
+        © {new Date().getFullYear()} ShopEase. All rights reserved.
+      </div>
+    </footer>
   );
 }

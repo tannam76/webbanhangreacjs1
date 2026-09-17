@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../assets/style/register.css';
 
 function Register() {
@@ -12,74 +12,72 @@ function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    // Kiểm tra xem mật khẩu và xác nhận mật khẩu có trùng khớp không
     if (password !== confirmPassword) {
       alert('Mật khẩu và xác nhận mật khẩu không trùng khớp.');
       return;
     }
 
-    // Lưu thông tin người dùng vào localStorage (hoặc vào cơ sở dữ liệu)
     const newUser = { email, username, password };
     localStorage.setItem('user', JSON.stringify(newUser));
-
-    alert('Đăng ký thành công!');
-    navigate('/login'); // Điều hướng đến trang đăng nhập
+    navigate('/login');
   };
 
   return (
-    <div>
-      <div className="register-container">
-        <div className="register-box">
-          <h2>Đăng ký</h2>
-          <form onSubmit={handleRegister}>
-            <div className="input-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <label>Tên đăng nhập:</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <label>Mật khẩu:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <label>Xác nhận mật khẩu:</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" className="register-button">
-              Đăng ký
-            </button>
-          </form>
-          <div className="login-link">
-            <p>
-              Đã có tài khoản? <a href="/Login">Đăng nhập</a>
-            </p>
+    <main className="auth-page">
+      <div className="auth-panel">
+        <span className="eyebrow">Thành viên mới</span>
+        <h1>Đăng ký</h1>
+        <p>Tạo tài khoản để mua sắm nhanh hơn và theo dõi ưu đãi mới nhất.</p>
+
+        <form onSubmit={handleRegister}>
+          <div className="input-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
+          <div className="input-group">
+            <label htmlFor="register-username">Tên đăng nhập</label>
+            <input
+              id="register-username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="register-password">Mật khẩu</label>
+            <input
+              id="register-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="confirm-password">Xác nhận mật khẩu</label>
+            <input
+              id="confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="auth-button">Đăng ký</button>
+        </form>
+
+        <div className="auth-switch">
+          Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

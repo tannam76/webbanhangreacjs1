@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders admin page at /admin route', () => {
+  window.history.pushState({}, '', '/admin');
+
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  expect(screen.getByText(/admin dashboard/i)).toBeInTheDocument();
 });

@@ -1,46 +1,81 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../assets/style/product-detail.css';
-import { useCart } from '../contexts/CartContext'; // Make sure this import is correct
-
-const products = [
-  { id: 1, name: 'jacket', price: 1000, category: 'Electronics', image: '/images/aokhoac.jpg', description: 'A high-performance laptop' },
-  { id: 2, name: 'Phone', price: 500, category: 'Electronics', image: '/images/phone.jpg', description: 'A smartphone with latest features' },
-  { id: 3, name: 'Shoes', price: 500, category: 'Clothing', image: '/images/shoes.jpg', description: 'Comfortable and stylish shoes' },
-];
+import { useCart } from '../contexts/CartContext';
+import { formatCurrency, products } from '../data/products';
 
 function ProductDetail() {
   const { id } = useParams();
-  const { addToCart } = useCart(); // Using hook to add product to cart
+  const { addToCart } = useCart();
   const [message, setMessage] = useState('');
-  const product = products.find((p) => p.id === parseInt(id));
+  const product = products.find((p) => p.id === parseInt(id, 10));
+  const relatedProducts = products
+    .filter((item) => item.category === product?.category && item.id !== product.id)
+    .slice(0, 3);
 
-  if (!product) return <h2>Không tìm thấy sản phẩm</h2>;
+  if (!product) {
+    return (
+      <main className="product-detail-container">
+        <div className="product-not-found">
+          <h2>Không tìm thấy sản phẩm</h2>
+          <Link to="/" className="secondary-button">Quay về trang chủ</Link>
+        </div>
+      </main>
+    );
+  }
 
   const handleAddToCart = () => {
     addToCart(product);
-    setMessage('Bạn đã thêm sản phẩm vào giỏ hàng thành công!');
-    setTimeout(() => setMessage(''), 500);
+    setMessage('Đã thêm sản phẩm vào giỏ hàng.');
+    setTimeout(() => setMessage(''), 1800);
   };
 
   return (
-    <div className="product-detail-container">
-      <div className="product-detail-card">
+    <main className="product-detail-container">
+      <section className="product-detail-card">
         <div className="product-image">
           <img src={product.image} alt={product.name} />
         </div>
         <div className="product-info">
+          <span className="eyebrow">{product.category}</span>
           <h1 className="product-name">{product.name}</h1>
-          <p className="product-price">Giá: ${product.price}</p>
-          <p className="product-category">Loại: {product.category}</p>
+          <p className="product-price">{formatCurrency(product.price)}</p>
           <p className="product-description">{product.description}</p>
+          <ul className="product-benefits">
+            <li>Đổi trả trong 7 ngày</li>
+            <li>Kiểm tra hàng trước khi nhận</li>
+            <li>Hỗ trợ tư vấn nhanh</li>
+          </ul>
           <button className="add-to-cart-button" onClick={handleAddToCart}>
             Thêm vào giỏ hàng
           </button>
           {message && <div className="success-message">{message}</div>}
         </div>
-      </div>
-    </div>
+      </section>
+
+      {relatedProducts.length > 0 && (
+        <section className="related-products" aria-label="Sản phẩm liên quan">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">Có thể bạn thích</span>
+              <h2>Sản phẩm liên quan</h2>
+            </div>
+          </div>
+          <div className="related-grid">
+            {relatedProducts.map((item) => (
+              <Link to={`/product/${item.id}`} className="related-card" key={item.id}>
+                <img src={item.image} alt={item.name} />
+                <div>
+                  <span>{item.category}</span>
+                  <h3>{item.name}</h3>
+                  <strong>{formatCurrency(item.price)}</strong>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
 

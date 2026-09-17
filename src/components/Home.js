@@ -1,74 +1,38 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { categories, formatCurrency, products } from '../data/products';
 
-const banners = [
-  { id: 1, image: 'https://i.imgur.com/bRJIi8c.jpeg' },
-  { id: 2, image: 'https://i.imgur.com/qvFyboO.png' },
-];
-
-const products = [
-  { id: 1, name: 'Jacket', category: 'Electronics', image: '/images/aokhoac.jpg' },
-  { id: 2, name: 'Phone', category: 'Electronics', image: '/images/phone.jpg' },
-  { id: 3, name: 'Shirt', category: 'Clothing', image: '/images/shirt.jpg' },
-  { id: 4, name: 'Watch', category: 'Accessories', image: '/images/watch.jpg' },
-  { id: 5, name: 'Shoes', category: 'Clothing', image: '/images/shoes.jpg' },
-  { id: 6, name: 'Shirt', category: 'Clothing', image: '/images/shirt.jpg' },
-  { id: 7, name: 'Watch', category: 'Accessories', image: '/images/watch.jpg' },
-  { id: 8, name: 'Shoes', category: 'Clothing', image: '/images/shoes.jpg' },
-  { id: 9, name: 'Shoes', category: 'Clothing', image: '/images/shoes.jpg' },
-  { id: 10, name: 'Shirt', category: 'Clothing', image: '/images/shirt.jpg' },
-  { id: 11, name: 'Watch', category: 'Accessories', image: '/images/watch.jpg' },
-  { id: 12, name: 'Shoes', category: 'Clothing', image: '/images/shoes.jpg' },
-  { id: 13, name: 'Hat', category: 'Accessories', image: '/images/hat.jpg' },
-  { id: 14, name: 'Jacket', category: 'Clothing', image: '/images/jacket.jpg' },
-  { id: 15, name: 'Tablet', category: 'Electronics', image: '/images/tablet.jpg' },
-  { id: 16, name: 'Belt', category: 'Accessories', image: '/images/belt.jpg' },
-  { id: 17, name: 'Jeans', category: 'Clothing', image: '/images/jeans.jpg' },
-  { id: 18, name: 'Headphones', category: 'Electronics', image: '/images/headphones.jpg' },
-  { id: 19, name: 'Scarf', category: 'Accessories', image: '/images/scarf.jpg' },
-  { id: 20, name: 'Socks', category: 'Clothing', image: '/images/socks.jpg' },
-  { id: 21, name: 'Backpack', category: 'Accessories', image: '/images/backpack.jpg' },
-  { id: 22, name: 'Gloves', category: 'Clothing', image: '/images/gloves.jpg' },
-  { id: 23, name: 'Monitor', category: 'Electronics', image: '/images/monitor.jpg' },
-  { id: 24, name: 'Mouse', category: 'Electronics', image: '/images/mouse.jpg' },
-  { id: 25, name: 'Keyboard', category: 'Electronics', image: '/images/keyboard.jpg' },
-  { id: 26, name: 'T-shirt', category: 'Clothing', image: '/images/tshirt.jpg' },
-  { id: 27, name: 'Cap', category: 'Accessories', image: '/images/cap.jpg' },
-  { id: 28, name: 'Laptop Bag', category: 'Accessories', image: '/images/laptopbag.jpg' },
-  { id: 29, name: 'Sneakers', category: 'Clothing', image: '/images/sneakers.jpg' },
-  { id: 30, name: 'Camera', category: 'Electronics', image: '/images/camera.jpg' },
-  { id: 31, name: 'Smart Watch', category: 'Electronics', image: '/images/smartwatch.jpg' },
-  { id: 32, name: 'Wallet', category: 'Accessories', image: '/images/wallet.jpg' },
-  { id: 33, name: 'Sunglasses', category: 'Accessories', image: '/images/sunglasses.jpg' },
-  { id: 34, name: 'Boots', category: 'Clothing', image: '/images/boots.jpg' },
-  { id: 35, name: 'Bracelet', category: 'Accessories', image: '/images/bracelet.jpg' },
-  { id: 36, name: 'Gaming Chair', category: 'Electronics', image: '/images/gamingchair.jpg' },
-  { id: 37, name: 'Laptop Bag', category: 'Accessories', image: '/images/laptopbag.jpg' },
-  { id: 38, name: 'Sneakers', category: 'Clothing', image: '/images/sneakers.jpg' },
-  { id: 39, name: 'Camera', category: 'Electronics', image: '/images/camera.jpg' },
-  { id: 40, name: 'Smart Watch', category: 'Electronics', image: '/images/smartwatch.jpg' },
-  { id: 41, name: 'Wallet', category: 'Accessories', image: '/images/wallet.jpg' },
-  { id: 42, name: 'Sunglasses', category: 'Accessories', image: '/images/sunglasses.jpg' },
-  { id: 43, name: 'Boots', category: 'Clothing', image: '/images/boots.jpg' },
-  { id: 44, name: 'Bracelet', category: 'Accessories', image: '/images/bracelet.jpg' },
-  { id: 45, name: 'Gaming Chair', category: 'Electronics', image: '/images/gamingchair.jpg' },
+const categoryShowcase = [
+  {
+    title: 'Công nghệ',
+    text: 'Thiết bị thông minh, hiệu năng ổn định cho học tập và làm việc.',
+    image: '/images/phone.jpg',
+  },
+  {
+    title: 'Thời trang',
+    text: 'Trang phục dễ phối, phom hiện đại và phù hợp sử dụng hằng ngày.',
+    image: '/images/aokhoac.jpg',
+  },
+  {
+    title: 'Phụ kiện',
+    text: 'Điểm nhấn tinh gọn giúp hoàn thiện phong cách cá nhân.',
+    image: '/images/watch.jpg',
+  },
 ];
 
 function Home({ search }) {
-  const [category, setCategory] = useState('All Categories');
+  const [category, setCategory] = useState('Tất cả');
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 15;
+  const productsPerPage = 6;
 
   const filteredProducts = products.filter((product) => {
     return (
       product.name.toLowerCase().includes(search.toLowerCase()) &&
-      (category === 'All Categories' || product.category === category)
+      (category === 'Tất cả' || product.category === category)
     );
   });
 
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / productsPerPage));
   const startIndex = (currentPage - 1) * productsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + productsPerPage);
 
@@ -85,65 +49,126 @@ function Home({ search }) {
   };
 
   return (
-    <div className="home-container">
-      <div id="bannerCarousel" className="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="3000">
-  <div className="carousel-inner">
-    {banners.map((banner, index) => (
-      <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={banner.id}>
-        <img src={banner.image} className="d-block w-100" alt={`Banner ${banner.id}`} />
-      </div>
-    ))}
-  </div>
-  <button
-    className="carousel-control-prev"
-    type="button"
-    data-bs-target="#bannerCarousel"
-    data-bs-slide="prev"
-  >
-    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span className="visually-hidden">Previous</span>
-  </button>
-  <button
-    className="carousel-control-next"
-    type="button"
-    data-bs-target="#bannerCarousel"
-    data-bs-slide="next"
-  >
-    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-    <span className="visually-hidden">Next</span>
-  </button>
-</div>
+    <main className="home-page">
+      <section className="hero">
+        <div className="hero-content">
+          <span className="eyebrow">Bộ sưu tập mới</span>
+          <h1>ShopTN</h1>
+          <p>
+            Mua sắm sản phẩm công nghệ, thời trang và phụ kiện được tuyển chọn
+            với trải nghiệm nhanh, rõ ràng và đáng tin cậy.
+          </p>
+          <div className="hero-actions">
+            <a href="#products" className="primary-button">Xem sản phẩm</a>
+            <Link to="/cart" className="secondary-button">Giỏ hàng</Link>
+          </div>
+        </div>
+        <div className="hero-media" aria-label="Sản phẩm nổi bật">
+          <img src="/images/laptop.jpg" alt="Laptop nổi bật" />
+          <div className="hero-card">
+            <strong>Miễn phí giao hàng</strong>
+            <span>Cho đơn từ 500.000đ</span>
+          </div>
+        </div>
+      </section>
 
-      <h1> Sản phẩm của chúng tôi </h1>
-      <div className="filter">
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option>All Categories</option>
-          <option>Electronics</option>
-          <option>Clothing</option>
-          <option>Accessories</option>
-        </select>
-      </div>
-      <div className="product-list">
-        {currentProducts.map((product) => (
-          <Link to={`/product/${product.id}`} key={product.id} className="product-card">
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>Category: {product.category}</p>
-          </Link>
-        ))}
-      </div>
-      <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
-      </div>
-    </div>
+      <section className="trust-strip" aria-label="Cam kết dịch vụ">
+        <div>
+          <strong>48h</strong>
+          <span>Giao hàng nhanh</span>
+        </div>
+        <div>
+          <strong>7 ngày</strong>
+          <span>Đổi trả linh hoạt</span>
+        </div>
+        <div>
+          <strong>100%</strong>
+          <span>Sản phẩm chọn lọc</span>
+        </div>
+      </section>
+
+      <section className="category-section" aria-label="Danh mục nổi bật">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Khám phá</span>
+            <h2>Danh mục nổi bật</h2>
+          </div>
+        </div>
+        <div className="category-grid">
+          {categoryShowcase.map((item) => (
+            <button
+              className="category-tile"
+              key={item.title}
+              onClick={() => {
+                setCategory(item.title);
+                setCurrentPage(1);
+                document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <img src={item.image} alt={item.title} />
+              <span>{item.title}</span>
+              <p>{item.text}</p>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="catalog-section" id="products">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Danh mục</span>
+            <h2>Sản phẩm nổi bật</h2>
+          </div>
+          <div className="filter">
+            <label htmlFor="category">Lọc theo danh mục</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              {categories.map((item) => (
+                <option key={item}>{item}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {currentProducts.length > 0 ? (
+          <div className="product-list">
+            {currentProducts.map((product) => (
+              <Link to={`/product/${product.id}`} key={product.id} className="product-card">
+                <span className="product-badge">{product.badge}</span>
+                <img src={product.image} alt={product.name} />
+                <div className="product-card-body">
+                  <span>{product.category}</span>
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <strong>{formatCurrency(product.price)}</strong>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state">
+            <h3>Không tìm thấy sản phẩm</h3>
+            <p>Thử nhập từ khóa khác hoặc chọn lại danh mục.</p>
+          </div>
+        )}
+
+        <div className="pagination">
+          <button onClick={handlePrevPage} disabled={currentPage === 1}>
+            Trước
+          </button>
+          <span>Trang {currentPage} / {totalPages}</span>
+          <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+            Sau
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }
 

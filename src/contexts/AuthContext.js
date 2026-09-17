@@ -5,30 +5,43 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [role, setRole] = useState('customer');
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Load initial state from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       setIsLoggedIn(true);
       setUsername(user.username);
+      setRole(user.role || 'customer');
+      setIsAdmin(user.role === 'admin');
     }
   }, []);
 
   const login = (user) => {
+    const normalizedUser = {
+      username: user.username,
+      password: user.password || '',
+      role: user.role || 'customer',
+    };
+
     setIsLoggedIn(true);
-    setUsername(user.username);
-    localStorage.setItem('user', JSON.stringify(user));  // Store user data
+    setUsername(normalizedUser.username);
+    setRole(normalizedUser.role);
+    setIsAdmin(normalizedUser.role === 'admin');
+    localStorage.setItem('user', JSON.stringify(normalizedUser));
   };
 
   const logout = () => {
     setIsLoggedIn(false);
     setUsername('');
-    localStorage.removeItem('user');  // Remove user data
+    setRole('customer');
+    setIsAdmin(false);
+    localStorage.removeItem('user');
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, username, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, username, role, isAdmin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
