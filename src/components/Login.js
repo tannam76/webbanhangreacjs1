@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import '../assets/style/login.css';
 import { AuthContext } from '../contexts/AuthContext';
@@ -20,7 +20,7 @@ function Login() {
 
     if (username === adminCredentials.username && password === adminCredentials.password) {
       login(adminCredentials);
-      navigate('/admin');
+      navigate('/');
       return;
     }
 

@@ -1,47 +1,78 @@
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [role, setRole] = useState('customer');
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState(null);
 
+  // ==============================
+  // ĐỌC USER TỪ LOCALSTORAGE
+  // ==============================
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      setIsLoggedIn(true);
-      setUsername(user.username);
-      setRole(user.role || 'customer');
-      setIsAdmin(user.role === 'admin');
+    try {
+      const savedUser = localStorage.getItem('user');
+
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+
+        if (parsedUser?.username) {
+          setUser(parsedUser);
+        }
+      }
+    } catch (error) {
+      console.error('Không thể đọc user:', error);
+      localStorage.removeItem('user');
     }
   }, []);
 
-  const login = (user) => {
+  // ==============================
+  // LOGIN
+  // ==============================
+  const login = (userData) => {
     const normalizedUser = {
-      username: user.username,
-      password: user.password || '',
-      role: user.role || 'customer',
+      username: userData.username,
+      role: userData.role || 'customer',
     };
 
-    setIsLoggedIn(true);
-    setUsername(normalizedUser.username);
-    setRole(normalizedUser.role);
-    setIsAdmin(normalizedUser.role === 'admin');
-    localStorage.setItem('user', JSON.stringify(normalizedUser));
+    localStorage.setItem(
+      'user',
+      JSON.stringify(normalizedUser)
+    );
+
+    setUser(normalizedUser);
   };
 
+  // ==============================
+  // LOGOUT
+  // ==============================
   const logout = () => {
-    setIsLoggedIn(false);
-    setUsername('');
-    setRole('customer');
-    setIsAdmin(false);
     localStorage.removeItem('user');
+    setUser(null);
   };
+
+  // ==============================
+  // THÔNG TIN USER
+  // ==============================
+  const isLoggedIn = Boolean(user);
+
+  const username = user?.username || '';
+
+  const role = user?.role || 'customer';
+
+  const isAdmin = role === 'admin';
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, username, role, isAdmin, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoggedIn,
+        username,
+        role,
+        isAdmin,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
